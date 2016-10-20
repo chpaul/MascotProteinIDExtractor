@@ -6,6 +6,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace MascotProteinIDExtractor
@@ -46,15 +47,15 @@ namespace MascotProteinIDExtractor
                 MascotResultExtractor = new MascotIDResultExtractor(txtDAT.Text, txtRaw.Text);
                 MascotResultExtractor.MinMascotScore = Convert.ToSingle(txtMinMascotScore.Text);
                 MascotResultExtractor.ReadMascotFile();
-                MascotResultExtractor.ProcessAll();
-                saveFileDialog1.FileName = Path.GetFileNameWithoutExtension(txtRaw.Text) + ".csv";
-                saveFileDialog1.Filter = "CSV file|*.csv";
-                if (saveFileDialog1.ShowDialog() == DialogResult.OK)
-                {
-                    MascotResultExtractor.Export(saveFileDialog1.FileName);
-                    MessageBox.Show("Done");
-                }
-                //backgroundWorker1.RunWorkerAsync();
+                //MascotResultExtractor.ProcessAll();
+                //saveFileDialog1.FileName = Path.GetFileNameWithoutExtension(txtRaw.Text) + ".csv";
+                //saveFileDialog1.Filter = "CSV file|*.csv";
+                //if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+                //{
+                //    MascotResultExtractor.Export(saveFileDialog1.FileName);
+                //    MessageBox.Show("Done");
+                //}
+                backgroundWorker1.RunWorkerAsync();
             }
             else
             {
@@ -66,30 +67,35 @@ namespace MascotProteinIDExtractor
         {
             int Total = MascotResultExtractor.MascotReader.PeptideQueries.Keys.Count;
             int Completed = 0;
-            foreach (int key in MascotResultExtractor.MascotReader.PeptideQueries.Keys)
+            Parallel.ForEach(MascotResultExtractor.MascotReader.PeptideQueries.Keys, key =>
             {
-                
                 MascotResultExtractor.ProcessOneQuery(key);
-                Completed++;
-                if (Completed%100 == 0)
-                {
-                    backgroundWorker1.ReportProgress(Convert.ToInt32(Completed/(float) Total*100));
-                }
-            }
+            });
+            //foreach (int key in MascotResultExtractor.MascotReader.PeptideQueries.Keys)
+            //{
+
+            //    MascotResultExtractor.ProcessOneQuery(key);
+            //    Completed++;
+            //    if (Completed%100 == 0)
+            //    {
+            //        backgroundWorker1.ReportProgress(Convert.ToInt32(Completed/(float) Total*100));
+            //    }
+            //}
         }
         private void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            saveFileDialog1.FileName = Path.GetFileNameWithoutExtension(txtRaw.Text)+".csv";
+            saveFileDialog1.FileName = Path.GetFileNameWithoutExtension(txtRaw.Text) + "_MascotIDExtractor.csv";
             saveFileDialog1.Filter = "CSV file|*.csv";
             if (saveFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 MascotResultExtractor.Export(saveFileDialog1.FileName);
+                progressBar1.Value = 100;
                 MessageBox.Show("Done");
             }
         }
         private void backgroundWorker1_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            //lblStatus.Text = "Completed " + e.ProgressPercentage.ToString() + "%";
+            progressBar1.Value = e.ProgressPercentage;
         }
     }
 }

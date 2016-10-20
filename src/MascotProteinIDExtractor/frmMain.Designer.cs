@@ -40,6 +40,7 @@
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.txtMinMascotScore = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
+            this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.SuspendLayout();
             // 
             // btnDATBrowse
@@ -132,11 +133,19 @@
             this.label3.TabIndex = 8;
             this.label3.Text = "Minimum Mascot Score:";
             // 
+            // progressBar1
+            // 
+            this.progressBar1.Location = new System.Drawing.Point(2, 100);
+            this.progressBar1.Name = "progressBar1";
+            this.progressBar1.Size = new System.Drawing.Size(566, 29);
+            this.progressBar1.TabIndex = 9;
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(580, 100);
+            this.ClientSize = new System.Drawing.Size(580, 141);
+            this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.txtMinMascotScore);
             this.Controls.Add(this.btnProcess);
@@ -167,6 +176,7 @@
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
         private System.Windows.Forms.TextBox txtMinMascotScore;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.ProgressBar progressBar1;
     }
 }
 
